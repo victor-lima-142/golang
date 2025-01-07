@@ -4,6 +4,7 @@ import (
 	"first-steps/conditions"
 	"first-steps/hello"
 	"first-steps/loops"
+	"first-steps/types"
 	"fmt"
 )
 
@@ -47,4 +48,28 @@ func main() {
 	// Call the ForInLoop function from the loops package
 	fmt.Println("ForInLoop:")
 	loops.ForInLoop()
+
+	// Call the StringType function from the types package
+	fmt.Println("StringType:")
+	types.StringType()
+
+	// Call the IntegerType function from the types package
+	fmt.Println("IntegerType:")
+	types.IntegerType()
+
+	// Call the FloatType function from the types package
+	fmt.Println("FloatType:")
+	types.FloatType()
+
+	// Call the BooleanType function from the types package
+	fmt.Println("BooleanType:")
+	types.BooleanType()
+
+	// Call the ArrayType function from the types package
+	fmt.Println("ArrayType:")
+	types.ArrayType()
+
+	// Call the SliceType function from the types package
+	fmt.Println("SliceType:")
+
 }
