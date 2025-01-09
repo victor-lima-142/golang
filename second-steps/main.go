@@ -1,7 +1,9 @@
 package main
 
-import "second-steps/requests"
+import (
+	files "second-steps/wfiles"
+)
 
 func main() {
-	requests.GetRequest()
+	files.ReadingFileAndFetchUrl()
 }
