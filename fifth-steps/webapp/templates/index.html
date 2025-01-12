@@ -17,6 +17,7 @@
 <body>
     <nav class="navbar navbar-light bg-light mb-4">
         <a class="navbar-brand" href="/">Web App Store</a>
+        <a class="btn btn-primary" href="/new">New</a>
     </nav>
     <div class="container">
         <section class="card">
@@ -28,6 +29,7 @@
                             <th>Description</th>
                             <th>Price</th>
                             <th>Quantity</th>
+                            <th>Options</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,6 +39,30 @@
                             <td>{{.Description}}</td>
                             <td>{{.Price}}</td>
                             <td>{{.Quantity}}</td>
+                            <td class="text-right">
+                                <button type="button" onclick='deleteProduct()' class="btn btn-danger">
+                                    Delete
+                                </button>
+                                <script>
+                                    async function deleteProduct() {
+                                        try {
+                                            const response = await fetch(`/delete?id=${Number("{{.ID}}")}`, {
+                                                method: 'DELETE',
+                                            });
+                                            if (response.ok) {
+                                                alert('Product deleted successfully!');
+                                                window.location.href = '/';
+                                            } else {
+                                                console.error('Error:', response.statusText);
+                                                alert('Failed to delete product. Please try again.');
+                                            }
+                                        } catch (error) {
+                                            console.error('Error:', error);
+                                            alert('An error occurred while submitting the form.');
+                                        }
+                                    }
+                                </script>
+                            </td>
                         </tr>
                         {{end}}
                     </tbody>

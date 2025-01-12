@@ -1,0 +1,92 @@
+{{define "New"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <title>Web App</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light mb-4">
+        <a class="navbar-brand" href="/">Web App Store - New</a>
+    </nav>
+    <div class="container">
+        <section class="card">
+            <div class="p-2">
+                <form id="productForm" action="/new" method="POST">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" name="description" class="form-control" id="description"
+                            placeholder="Description">
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" step="0.01" name="price" class="form-control" id="price"
+                            placeholder="Price">
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" name="quantity" class="form-control" id="quantity" placeholder="Quantity">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <script>
+                    document.getElementById('productForm').addEventListener('submit', async function (event) {
+                        event.preventDefault(); // Prevent default form submission
+
+                        // Gather form data
+                        const formData = new FormData(this);
+                        const data = {};
+                        formData.forEach((value, key) => {
+                            if (key === 'price') {
+                                data[key] = parseFloat(value);
+                            } else if (key === "quantity") {
+                                data[key] = Math.round(Number(value));
+                            } else {
+                                data[key] = value;
+                            }
+
+                        });
+
+                        try {
+                            const response = await fetch('/new', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(data), // Convert form data to JSON
+                            });
+
+                            if (response.ok) {
+                                alert('Product created successfully!');
+                                window.location.href = '/';
+                            } else {
+                                console.error('Error:', response.statusText);
+                                alert('Failed to create product. Please try again.');
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            alert('An error occurred while submitting the form.');
+                        }
+                    });
+                </script>
+            </div>
+        </section>
+
+    </div>
+</body>
+
+</html>
+{{end}}
