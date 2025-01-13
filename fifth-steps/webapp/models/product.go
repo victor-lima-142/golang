@@ -35,6 +35,17 @@ func ListProduct(db *sql.DB) []Product {
 	return products
 }
 
+func GetProduct(db *sql.DB, id int) Product {
+	query := "SELECT id, name, description, price, quantity FROM products WHERE id = $1;"
+	sqlRow := db.QueryRow(query, id)
+	if sqlRow.Err() != nil {
+		panic(sqlRow.Err())
+	}
+	var product Product
+	sqlRow.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Quantity)
+	return product
+}
+
 func (product *Product) CreateProduct(db *sql.DB) (sql.Result, error) {
 	query := `INSERT INTO products (name, description, price, quantity) VALUES ($1, $2, $3, $4);`
 	prdStr := fmt.Sprint(product)
@@ -47,8 +58,7 @@ func (product *Product) DeleteProduct(db *sql.DB) (sql.Result, error) {
 	return db.Exec(query, product.ID)
 }
 
-func (product *Product) UpdateProduct(db *sql.DB) bool {
-	query := `UPDATE products SET name = '$1', description = '$2', price = $3, quantity = $4 WHERE id =$5;`
-	_, err := db.Exec(query, product.ID)
-	return err == nil
+func (product *Product) UpdateProduct(db *sql.DB) (sql.Result, error) {
+	query := `UPDATE products SET name = $1, description = $2, price = $3, quantity = $4 WHERE id = $5;`
+	return db.Exec(query, product.Name, product.Description, product.Price, product.Quantity, product.ID)
 }

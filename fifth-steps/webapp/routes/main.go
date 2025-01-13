@@ -70,3 +70,49 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusBadRequest)
 	fmt.Fprintln(w, "Wrong method")
 }
+
+func Update(w http.ResponseWriter, r *http.Request) {
+	idUrl := r.URL.Query().Get("id")
+	dbConection, _ := db.ConectDB()
+	defer dbConection.Close()
+
+	if idUrl == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Missing id")
+	}
+	id, _ := strconv.Atoi(idUrl)
+
+	if r.Method == "GET" {
+		product := models.GetProduct(dbConection, id)
+		if product.ID == 0 {
+			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprintln(w, "Product not found")
+		} else {
+			Templ.ExecuteTemplate(w, "Update", product)
+		}
+	} else if r.Method == "POST" || r.Method == "PUT" {
+		w.Header().Set("Content-Type", "application/json")
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			panic(err)
+		}
+		var tempProduct models.Product
+		err = json.Unmarshal(body, &tempProduct)
+		if err != nil {
+			panic(err)
+		}
+		tempProduct.ID = id
+		res, err := tempProduct.UpdateProduct(dbConection)
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintln(w, err.Error())
+		} else {
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprintln(w, res)
+		}
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintln(w, "Wrong method")
+	}
+}

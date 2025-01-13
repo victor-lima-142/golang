@@ -1,4 +1,4 @@
-{{define "New"}}
+{{define "Update"}}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,37 +16,38 @@
 
 <body>
     <nav class="navbar navbar-light bg-light mb-4">
-        <a class="navbar-brand" href="/">Web App Store - New</a>
+        <a class="navbar-brand" href="/">Web App Store - Update</a>
     </nav>
     <div class="container">
         <section class="card">
             <div class="p-2">
-                <form id="productForm" action="/new" method="POST">
+                <form id="productForm" method="PUT">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" name="name" class="form-control" id="name" placeholder="Name">
+                        <input type="text" name="name" class="form-control" value="{{.Name}}" id="name"
+                            placeholder="Name">
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <input type="text" name="description" class="form-control" id="description"
-                            placeholder="Description">
+                        <input type="text" name="description" class="form-control" value="{{.Description}}"
+                            id="description" placeholder="Description">
                     </div>
                     <div class="form-group">
                         <label for="price">Price</label>
-                        <input type="number" step="0.01" name="price" class="form-control" id="price"
+                        <input type="number" step="0.01" name="price" class="form-control" value="{{.Price}}" id="price"
                             placeholder="Price">
                     </div>
                     <div class="form-group">
                         <label for="price">Quantity</label>
-                        <input type="number" name="quantity" class="form-control" id="quantity" placeholder="Quantity">
+                        <input type="number" name="quantity" class="form-control" value="{{.Quantity}}" id="quantity"
+                            placeholder="Quantity">
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
                 <script>
                     document.getElementById('productForm').addEventListener('submit', async function (event) {
-                        event.preventDefault(); // Prevent default form submission
+                        event.preventDefault();
 
-                        // Gather form data
                         const formData = new FormData(this);
                         const data = {};
                         formData.forEach((value, key) => {
@@ -61,8 +62,8 @@
                         });
 
                         try {
-                            const response = await fetch('/new', {
-                                method: 'POST',
+                            const response = await fetch('/edit?id={{.ID}}', {
+                                method: 'PUT',
                                 headers: {
                                     'Content-Type': 'application/json',
                                 },
@@ -70,11 +71,11 @@
                             });
 
                             if (response.ok) {
-                                alert('Product created successfully!');
+                                alert('Product updated successfully!');
                                 window.location.href = '/';
                             } else {
                                 console.error('Error:', response.statusText);
-                                alert('Failed to create product. Please try again.');
+                                alert('Failed to update product. Please try again.');
                             }
                         } catch (error) {
                             console.error('Error:', error);
